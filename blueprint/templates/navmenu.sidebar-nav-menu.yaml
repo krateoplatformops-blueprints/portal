@@ -1,0 +1,22 @@
+kind: NavMenu
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: sidebar-nav-menu
+  namespace: {{ .Release.Namespace }}
+spec:
+  widgetData:
+    items: []
+  resourcesRefs: 
+    items: []
+  resourcesRefsTemplate:
+    - iterator: ${ .navmenuitems }
+      template:
+        id: ${ .metadata.namespace + "_" + .metadata.name }
+        name: ${ .metadata.name }
+        apiVersion: ${ .apiVersion }
+        resource: navmenuitems
+        namespace: ${ .metadata.namespace }
+        verb: GET
+  apiRef:
+    name: sidebar-nav-menu-items
+    namespace: {{ .Release.Namespace }}

@@ -1,0 +1,26 @@
+kind: Row
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: dashboard-compositions-panel-row
+  namespace: {{ .Release.Namespace }}
+spec:
+  widgetData:
+    items:
+      - resourceRefId: dashboard-compositions-panel-row-piechart
+        size: 6
+      - resourceRefId: dashboard-compositions-panel-row-piechart-table
+        size: 18
+  resourcesRefs:
+    items:
+      - id: dashboard-compositions-panel-row-piechart
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: dashboard-compositions-panel-row-piechart
+        namespace: {{ .Release.Namespace }}
+        resource: piecharts
+        verb: GET
+      - id: dashboard-compositions-panel-row-piechart-table
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: dashboard-compositions-panel-row-table
+        namespace: {{ .Release.Namespace }}
+        resource: tables
+        verb: GET

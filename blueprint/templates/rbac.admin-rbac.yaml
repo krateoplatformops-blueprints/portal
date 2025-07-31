@@ -1,0 +1,38 @@
+{{- if .Values.enableAdminUser }}
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/basic-auth
+metadata:
+  name: admin-password
+  namespace: {{ .Release.Namespace }}
+stringData:
+  password: {{ randAlphaNum 12 | quote }}
+---
+apiVersion: basic.authn.krateo.io/v1alpha1
+kind: User
+metadata:
+  name: admin
+  namespace: {{ .Release.Namespace }}
+spec:
+  displayName: Admin
+  avatarURL: https://i.pravatar.cc/256?img=69
+  groups:
+    - admins
+  passwordRef:
+    namespace: {{ .Release.Namespace }}
+    name: admin-password
+    key: password
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cluster-admin-binding-{{ .Release.Namespace }}
+subjects:
+- kind: Group
+  name: admins
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

@@ -1,0 +1,28 @@
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: blueprints-panels
+  namespace: {{ .Release.Namespace }}
+spec:
+  api:
+  - name: namespaces
+    path: "/api/v1/namespaces"
+    filter: "[.namespace.items[] | .metadata.name]"
+  - name: blueprintspanels
+    dependsOn: 
+      name: namespaces
+      iterator: .namespaces
+    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/panels" }
+    continueOnError: true
+  filter: >
+    {
+      blueprintspanels: (
+        if (.blueprintspanels | type) == "array" then
+          [.blueprintspanels[]?.items[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "blueprints")]
+        elif (.blueprintspanels | type) == "object" then
+          [.blueprintspanels.items[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "blueprints")]
+        else
+          []
+        end
+      )
+    }

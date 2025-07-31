@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": true,
+  "properties": {
+    "enableAdminUser": {
+      "default": true,
+      "description": "Enable admin user (basic authentication) with cluster-admin permissions",
+      "title": "enableAdminUser",
+      "type": "boolean"
+    },
+    "enableCyberjokerUser": {
+      "default": true,
+      "description": "Enable cyberjoker user (basic authentication) with namespace-scoped permissions",
+      "title": "enableCyberjokerUser",
+      "type": "boolean"
+    },
+    "enableDemoSystemNamespace": {
+      "default": true,
+      "description": "enabling the demo creates the demo-system namespace, deploys two Route resources within it, and grants permissions to the cyberjoker user if that user is enabled",
+      "title": "enableDemoSystemNamespace",
+      "type": "boolean"
+    }
+  },
+  "type": "object"
+}

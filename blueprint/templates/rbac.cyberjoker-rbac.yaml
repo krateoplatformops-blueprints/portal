@@ -1,0 +1,275 @@
+{{- if .Values.enableCyberjokerUser }}
+# krateo-system permissions
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/basic-auth
+metadata:
+  name: cyberjoker-password
+  namespace: {{ .Release.Namespace }}
+stringData:
+  password: {{ randAlphaNum 12 | quote }}
+---
+apiVersion: basic.authn.krateo.io/v1alpha1
+kind: User
+metadata:
+  name: cyberjoker
+  namespace: {{ .Release.Namespace }}
+spec:
+  displayName: Cyber Joker
+  avatarURL: https://i.pravatar.cc/256?img=70
+  groups:
+    - devs
+  passwordRef:
+    namespace: {{ .Release.Namespace }}
+    name: cyberjoker-password
+    key: password
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: devs-get-list-any-template-in-krateo-namespace
+  namespace: {{ .Release.Namespace }}
+rules:
+- apiGroups:
+  - widgets.templates.krateo.io
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: devs-get-list-any-template-in-krateo-namespace
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: devs-get-list-any-template-in-krateo-namespace
+subjects:
+- kind: Group
+  name: devs
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: devs-get-any-restaction-in-krateo-namespace
+  namespace: {{ .Release.Namespace }}
+rules:
+- apiGroups:
+  - templates.krateo.io
+  resources:
+  - restactions
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: devs-get-any-restaction-in-krateo-namespace
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: devs-get-any-restaction-in-krateo-namespace
+subjects:
+- kind: Group
+  name: devs
+  apiGroup: rbac.authorization.k8s.io
+---
+# cluster-role permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: devs-list-any-namespace-in-cluster
+rules:
+- apiGroups:
+  - ''
+  resources:
+  - namespaces
+  verbs:
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: devs-list-any-namespace-in-cluster
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: devs-list-any-namespace-in-cluster
+subjects:
+- kind: Group
+  name: devs
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: devs-get-list-any-customresourcedefinition-in-cluster
+rules:
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: devs-get-list-any-customresourcedefinition-in-cluster
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: devs-get-list-any-customresourcedefinition-in-cluster
+subjects:
+- kind: Group
+  name: devs
+  apiGroup: rbac.authorization.k8s.io
+---
+{{- if .Values.enableDemoSystemNamespace }}
+# demo-system permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: devs-get-list-any-compositiondefinitions-in-fireworksapp-namespace
+  namespace: demo-system
+rules:
+- apiGroups:
+  - core.krateo.io
+  resources:
+  - compositiondefinitions
+  verbs:
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: devs-get-list-any-compositiondefinitions-in-fireworksapp-namespace
+  namespace: demo-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: devs-get-list-any-compositiondefinitions-in-fireworksapp-namespace
+subjects:
+- kind: Group
+  name: devs
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: devs-create-get-list-frontendgithubscaffoldings-composition-in-fireworksapp-namespace
+  namespace: demo-system
+rules:
+- apiGroups:
+  - composition.krateo.io
+  resources:
+  - frontendgithubscaffoldings
+  verbs:
+  - create
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: devs-create-get-list-frontendgithubscaffoldings-composition-in-fireworksapp-namespace
+  namespace: demo-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: devs-create-get-list-frontendgithubscaffoldings-composition-in-fireworksapp-namespace
+subjects:
+- kind: Group
+  name: devs
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: devs-get-list-any-widget-in-fireworksapp-namespace
+  namespace: demo-system
+rules:
+- apiGroups:
+  - widgets.templates.krateo.io
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: devs-get-list-any-widget-in-fireworksapp-namespace
+  namespace: demo-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: devs-get-list-any-widget-in-fireworksapp-namespace
+subjects:
+- kind: Group
+  name: devs
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: devs-get-any-restaction-in-fireworksapp-namespace
+  namespace: demo-system
+rules:
+- apiGroups:
+  - templates.krateo.io
+  resources:
+  - restactions
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: devs-get-any-restaction-in-fireworksapp-namespace
+  namespace: demo-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: devs-get-any-restaction-in-fireworksapp-namespace
+subjects:
+- kind: Group
+  name: devs
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: devs-get-any-configmap-in-fireworksapp-namespace
+  namespace: demo-system
+rules:
+- apiGroups:
+  - ''
+  resources:
+  - configmaps
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: devs-get-any-configmap-in-fireworksapp-namespace
+  namespace: demo-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: devs-get-any-configmap-in-fireworksapp-namespace
+subjects:
+- kind: Group
+  name: devs
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}
+{{- end }}

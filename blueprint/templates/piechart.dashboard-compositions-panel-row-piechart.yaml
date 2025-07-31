@@ -1,0 +1,22 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: PieChart
+metadata:
+  name: dashboard-compositions-panel-row-piechart
+  namespace: {{ .Release.Namespace }}
+spec:
+  widgetData:
+    description: Compositions
+    series:
+      data: []
+      total: 0
+    title: "0"
+  widgetDataTemplate:
+    - forPath: series.data
+      expression: ${ .data }
+    - forPath: series.total
+      expression: ${ .total }
+    - forPath: title
+      expression: ${ .total | tostring }
+  apiRef:
+    name: compositions-list
+    namespace: {{ .Release.Namespace }}

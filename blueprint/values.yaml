@@ -1,0 +1,24 @@
+# Default values for composable-portal-starter.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# @schema
+# description: Enable admin user (basic authentication) with cluster-admin permissions
+# type: boolean
+# default: true
+# @schema
+enableAdminUser: true
+
+# @schema
+# description: Enable cyberjoker user (basic authentication) with namespace-scoped permissions
+# type: boolean
+# default: true
+# @schema
+enableCyberjokerUser: true
+
+# @schema
+# description: enabling the demo creates the demo-system namespace, deploys two Route resources within it, and grants permissions to the cyberjoker user if that user is enabled
+# type: boolean
+# default: true
+# @schema
+enableDemoSystemNamespace: true

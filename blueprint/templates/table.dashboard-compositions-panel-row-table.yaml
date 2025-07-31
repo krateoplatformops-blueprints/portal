@@ -1,0 +1,27 @@
+apiVersion: widgets.templates.krateo.io/v1beta1
+kind: Table
+metadata:
+  name: dashboard-compositions-panel-row-table
+  namespace: {{ .Release.Namespace }}
+spec:
+  apiRef:
+    name: dashboard-compositions-panel
+    namespace: {{ .Release.Namespace }}
+  widgetData:
+    columns:
+    - title: Name
+      valueKey: name
+    - title: Namespace
+      valueKey: namespace
+    - title: Status
+      valueKey: status
+    - title: Date
+      valueKey: date
+    data: []
+    pageSize: 10
+  widgetDataTemplate:
+    - forPath: data
+      expression: ${ .list }
+  apiRef:
+    name: compositions-list
+    namespace: {{ .Release.Namespace }}

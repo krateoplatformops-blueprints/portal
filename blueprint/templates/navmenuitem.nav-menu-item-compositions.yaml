@@ -1,0 +1,20 @@
+kind: NavMenuItem
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: nav-menu-item-compositions
+  namespace: {{ .Release.Namespace }}
+spec:
+  widgetData:
+    resourceRefId: compositions-page-datagrid
+    label: Compositions
+    icon: fa-shapes
+    path: /compositions
+    order: 30
+  resourcesRefs:
+    items:
+      - id: compositions-page-datagrid
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: compositions-page-datagrid
+        namespace: {{ .Release.Namespace }}
+        resource: pages
+        verb: GET

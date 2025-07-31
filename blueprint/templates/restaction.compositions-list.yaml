@@ -1,0 +1,121 @@
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: compositions-list
+  namespace: {{ .Release.Namespace }}
+spec:
+  api:
+  - name: allNamespacesAndCrds
+    path: "/call?apiVersion=templates.krateo.io%2Fv1&resource=restactions&name=compositions-get-ns-and-crd&namespace={{ .Release.Namespace }}"
+    verb: GET
+    endpointRef:
+      name: snowplow-endpoint
+      namespace: {{ .Release.Namespace }}
+    headers:
+    - 'Accept: application/json'
+    continueOnError: true
+    errorKey: allNamespacesAndCrdsError
+    exportJwt: true
+  - name: allCompositions
+    dependsOn: 
+      name: allNamespacesAndCrds
+      iterator: ".allNamespacesAndCrds.status"
+    path: ${ "/apis/composition.krateo.io/" + (.version) + "/namespaces/" + (.namespace) + "/" + (.plural) }
+    verb: GET 
+    continueOnError: true
+    errorKey: allCompositionsError
+  filter: >
+    {
+      total: (
+        (
+          if (.allCompositions | type) == "array" then
+            [.allCompositions[]?.items[]?]
+          elif (.allCompositions | type) == "object" then
+            [.allCompositions.items[]?]
+          else
+            []
+          end
+        | length)
+      ),
+      data: [
+        {
+          color: "green",
+          value: (
+            (
+              if (.allCompositions | type) == "array" then
+                [.allCompositions[]?.items[]?]
+              elif (.allCompositions | type) == "object" then
+                [.allCompositions.items[]?]
+              else
+                []
+              end
+            | map(select((.status.conditions // [])
+              | map(select(.type == "Ready" and .status == "True"))
+              | length > 0))
+            | length)
+          ),
+          label: "Ready:True"
+        },
+        {
+          color: "orange",
+          value: (
+            (
+              if (.allCompositions | type) == "array" then
+                [.allCompositions[]?.items[]?]
+              elif (.allCompositions | type) == "object" then
+                [.allCompositions.items[]?]
+              else
+                []
+              end
+            | map(select((.status.conditions // [])
+              | map(select(.type == "Ready" and .status == "False"))
+              | length > 0))
+            | length)
+          ),
+          label: "Ready:False"
+        },
+        {
+          color: "gray",
+          value: (
+            (
+              if (.allCompositions | type) == "array" then
+                [.allCompositions[]?.items[]?]
+              elif (.allCompositions | type) == "object" then
+                [.allCompositions.items[]?]
+              else
+                []
+              end
+            | map(select((.status.conditions // [])
+              | map(select(.type == "Ready" and (.status == "True" or .status == "False")))
+              | length == 0))
+            | length)
+          ),
+          label: "Unknown"
+        }
+      ],
+      list: (
+        (
+          if (.allCompositions | type) == "array" then
+            [.allCompositions[]?.items[]?]
+          elif (.allCompositions | type) == "object" then
+            [.allCompositions.items[]?]
+          else
+            []
+          end
+        | map({
+            key: .metadata.uid,
+            name: .metadata.name,
+            namespace: .metadata.namespace,
+            date: .metadata.creationTimestamp,
+            status: (
+              if (.status? and .status.conditions?) then
+                (.status.conditions[]? | select(.type == "Ready") | "Ready: " + .status)?
+              else
+                "Status not available"
+              end
+            )
+          })
+        | sort_by(.date)
+        | reverse)
+      )
+    }

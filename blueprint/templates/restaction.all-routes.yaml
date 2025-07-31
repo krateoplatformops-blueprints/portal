@@ -1,0 +1,28 @@
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: all-routes
+  namespace: {{ .Release.Namespace }}
+spec:
+  api:
+  - name: namespaces
+    path: "/api/v1/namespaces"
+    filter: "[.namespaces.items[] | .metadata.name]"
+  - name: routes
+    continueOnError: true
+    dependsOn: 
+      name: namespaces
+      iterator: .namespaces
+    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/routes" }
+  filter: >
+    {
+      routes: (
+        if (.routes | type) == "array" then
+          [.routes[]?.items[]?]
+        elif (.routes | type) == "object" then
+          [.routes.items[]?]
+        else
+          []
+        end
+      )
+    }

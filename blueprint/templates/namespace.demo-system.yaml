@@ -1,0 +1,6 @@
+{{- if .Values.enableDemoSystemNamespace }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo-system
+{{- end }}

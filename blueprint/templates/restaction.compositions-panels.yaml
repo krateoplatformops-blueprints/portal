@@ -1,0 +1,28 @@
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: compositions-panels
+  namespace: {{ .Release.Namespace }}
+spec:
+  api:
+  - name: namespaces
+    path: "/api/v1/namespaces"
+    filter: "[.namespaces.items[] | .metadata.name]"
+  - name: compositionspanels
+    dependsOn: 
+      name: namespaces
+      iterator: .namespaces
+    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/panels" }
+    continueOnError: true
+  filter: >
+    {
+      compositionspanels: (
+        if (.compositionspanels | type) == "array" then
+          [.compositionspanels[]?.items[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "compositions")]
+        elif (.compositionspanels | type) == "object" then
+          [.compositionspanels.items[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "compositions")]
+        else
+          []
+        end
+      )
+    }

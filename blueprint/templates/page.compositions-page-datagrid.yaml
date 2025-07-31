@@ -1,0 +1,24 @@
+kind: Page
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: compositions-page-datagrid
+  namespace: {{ .Release.Namespace }}
+spec:
+  widgetData:
+    items:
+      - resourceRefId: compositions-page-datagrid-button-drawer-filters
+      - resourceRefId: compositions-page-datagrid
+  resourcesRefs:
+    items:
+      - id: compositions-page-datagrid-button-drawer-filters
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: compositions-page-datagrid-button-drawer-filters
+        namespace: {{ .Release.Namespace }}
+        resource: buttons
+        verb: GET
+      - id: compositions-page-datagrid
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: compositions-page-datagrid
+        namespace: {{ .Release.Namespace }}
+        resource: datagrids
+        verb: GET
