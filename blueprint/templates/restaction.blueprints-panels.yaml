@@ -7,7 +7,7 @@ spec:
   api:
   - name: namespaces
     path: "/api/v1/namespaces"
-    filter: "[.namespace.items[] | .metadata.name]"
+    filter: "[.namespaces.items[] | .metadata.name]"
   - name: blueprintspanels
     dependsOn: 
       name: namespaces
