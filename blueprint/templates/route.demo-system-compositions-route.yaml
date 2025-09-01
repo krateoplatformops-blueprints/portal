@@ -4,6 +4,8 @@ kind: Route
 metadata:
   name: demo-system-compositions-route
   namespace: demo-system
+  annotations:
+    "krateo.io/verbose": "true"
 spec:
   widgetData:
     path: /compositions/demo-system

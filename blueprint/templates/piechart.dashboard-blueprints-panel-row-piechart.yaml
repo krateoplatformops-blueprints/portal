@@ -3,6 +3,8 @@ kind: PieChart
 metadata:
   name: dashboard-blueprints-panel-row-piechart
   namespace: {{ .Release.Namespace }}
+  annotations:
+    "krateo.io/verbose": "true"
 spec:
   widgetData:
     description: Blueprints

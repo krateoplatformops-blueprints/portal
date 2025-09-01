@@ -3,6 +3,8 @@ kind: RESTAction
 metadata:
   name: compositions-get-ns-and-crd
   namespace: {{ .Release.Namespace }}
+  annotations:
+    "krateo.io/verbose": "true"
 spec:
   api:
   - name: crds

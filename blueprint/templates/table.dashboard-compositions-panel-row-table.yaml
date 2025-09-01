@@ -3,10 +3,9 @@ kind: Table
 metadata:
   name: dashboard-compositions-panel-row-table
   namespace: {{ .Release.Namespace }}
+  annotations:
+    "krateo.io/verbose": "true"
 spec:
-  apiRef:
-    name: dashboard-compositions-panel
-    namespace: {{ .Release.Namespace }}
   widgetData:
     columns:
     - title: Name

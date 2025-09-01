@@ -3,6 +3,8 @@ kind: RESTAction
 metadata:
   name: compositions-list
   namespace: {{ .Release.Namespace }}
+  annotations:
+    "krateo.io/verbose": "true"
 spec:
   api:
   - name: allNamespacesAndCrds
@@ -25,97 +27,93 @@ spec:
     continueOnError: true
     errorKey: allCompositionsError
   filter: >
+    (
+      # Normalize items once
+      if (.allCompositions | type) == "array" then
+        [.allCompositions[]?.items[]?]
+      elif (.allCompositions | type) == "object" then
+        [.allCompositions.items[]?]
+      else
+        []
+      end
+    ) as $items
+    |
     {
-      total: (
-        (
-          if (.allCompositions | type) == "array" then
-            [.allCompositions[]?.items[]?]
-          elif (.allCompositions | type) == "object" then
-            [.allCompositions.items[]?]
-          else
-            []
-          end
-        | length)
-      ),
+      total: ($items | length),
+
       data: [
         {
           color: "green",
-          value: (
-            (
-              if (.allCompositions | type) == "array" then
-                [.allCompositions[]?.items[]?]
-              elif (.allCompositions | type) == "object" then
-                [.allCompositions.items[]?]
-              else
-                []
-              end
+          value: ($items
             | map(select((.status.conditions // [])
               | map(select(.type == "Ready" and .status == "True"))
               | length > 0))
-            | length)
-          ),
+            | length),
           label: "Ready:True"
         },
         {
           color: "orange",
-          value: (
-            (
-              if (.allCompositions | type) == "array" then
-                [.allCompositions[]?.items[]?]
-              elif (.allCompositions | type) == "object" then
-                [.allCompositions.items[]?]
-              else
-                []
-              end
+          value: ($items
             | map(select((.status.conditions // [])
               | map(select(.type == "Ready" and .status == "False"))
               | length > 0))
-            | length)
-          ),
+            | length),
           label: "Ready:False"
         },
         {
           color: "gray",
-          value: (
-            (
-              if (.allCompositions | type) == "array" then
-                [.allCompositions[]?.items[]?]
-              elif (.allCompositions | type) == "object" then
-                [.allCompositions.items[]?]
-              else
-                []
-              end
+          value: ($items
             | map(select((.status.conditions // [])
               | map(select(.type == "Ready" and (.status == "True" or .status == "False")))
               | length == 0))
-            | length)
-          ),
+            | length),
           label: "Unknown"
         }
       ],
+
       list: (
-        (
-          if (.allCompositions | type) == "array" then
-            [.allCompositions[]?.items[]?]
-          elif (.allCompositions | type) == "object" then
-            [.allCompositions.items[]?]
-          else
-            []
-          end
-        | map({
-            key: .metadata.uid,
-            name: .metadata.name,
-            namespace: .metadata.namespace,
-            date: .metadata.creationTimestamp,
-            status: (
-              if (.status? and .status.conditions?) then
-                (.status.conditions[]? | select(.type == "Ready") | "Ready: " + .status)?
-              else
-                "Status not available"
-              end
-            )
-          })
-        | sort_by(.date)
-        | reverse)
+        $items
+        | map([
+            {
+              valueKey: "key",
+              kind: "jsonSchemaType",
+              type: "string",
+              stringValue: .metadata.uid
+            },
+            {
+              valueKey: "name",
+              kind: "jsonSchemaType",
+              type: "string",
+              stringValue: .metadata.name
+            },
+            {
+              valueKey: "namespace",
+              kind: "jsonSchemaType",
+              type: "string",
+              stringValue: .metadata.namespace
+            },
+            {
+              valueKey: "date",
+              kind: "jsonSchemaType",
+              type: "string",
+              stringValue: .metadata.creationTimestamp
+            },
+            {
+              valueKey: "status",
+              kind: "jsonSchemaType",
+              type: "string",
+              stringValue: (
+                if (.status? and .status.conditions?) then
+                  (.status.conditions[]? | select(.type == "Ready") | "Ready: " + .status)?
+                  // "Status not available"
+                else
+                  "Status not available"
+                end
+              )
+            }
+          ])
+        # Sort rows by the "date" cell's stringValue, then reverse (desc)
+        | sort_by( ([.[] | select(.valueKey == "date") | .stringValue] | first) )
+        | reverse
       )
     }

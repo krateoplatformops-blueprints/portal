@@ -3,6 +3,8 @@ kind: RESTAction
 metadata:
   name: all-routes
   namespace: {{ .Release.Namespace }}
+  annotations:
+    "krateo.io/verbose": "true"
 spec:
   api:
   - name: namespaces
