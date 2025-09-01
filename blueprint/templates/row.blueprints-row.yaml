@@ -3,6 +3,8 @@ apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
   name: blueprints-row
   namespace: {{ .Release.Namespace }}
+  annotations:
+    "krateo.io/verbose": "true"
 spec:
   apiRef:
     name: blueprints-panels

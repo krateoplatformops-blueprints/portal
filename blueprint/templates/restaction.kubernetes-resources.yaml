@@ -1,0 +1,52 @@
+apiVersion: templates.krateo.io/v1
+kind: RESTAction
+metadata:
+  name: kubernetes-resources
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    "krateo.io/verbose": "true"
+spec:
+  api:
+  - name: getCoreResources
+    path: "/api/v1"
+    verb: GET
+    filter: >
+      [.getCoreResources.resources[]
+        | select(.name | contains("/") | not)
+        | { 
+            apiVersion: "v1",
+            resource: .name,
+            api: "/api",
+            namespaced: .namespaced 
+          } 
+      ]
+  - name: getAllGroupVersions
+    path: "/apis/"
+    verb: GET
+    filter: >
+      [ 
+        .getAllGroupVersions.groups[].versions[] 
+        | {groupVersion} 
+      ]
+  - name: fetchGroupVersion
+    dependsOn:
+      iterator: .getAllGroupVersions
+      name: getAllGroupVersions
+    path: ${ "/apis/" + (.groupVersion)}
+    continueOnError: true
+    filter: >
+      [
+        .fetchGroupVersion
+        | . as $list
+        | $list.resources[]
+        | select(.name | contains("/") | not)
+        | {
+            apiVersion: $list.groupVersion,
+            resource: .name,
+            namespaced: .namespaced,
+            api: (if $list.groupVersion == "v1" then "/api" else "/apis" end)
+          }
+      ]
+  filter: >
+    (.getCoreResources + .fetchGroupVersion)
+      | unique_by({resource, apiVersion})
