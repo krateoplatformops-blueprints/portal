@@ -110,6 +110,18 @@ spec:
                   "Status not available"
                 end
               )
+            },
+            {
+              valueKey: "kind",
+              kind: "jsonSchemaType",
+              type: "string",
+              stringValue: .kind
+            },
+            {
+              valueKey: "apiversion",
+              kind: "jsonSchemaType",
+              type: "string",
+              stringValue: .apiVersion
             }
           ])
         # Sort rows by the "date" cell's stringValue, then reverse (desc)

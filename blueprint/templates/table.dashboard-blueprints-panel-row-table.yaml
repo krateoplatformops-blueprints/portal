@@ -16,6 +16,10 @@ spec:
       valueKey: status
     - title: Date
       valueKey: date
+    - title: Kind
+      valueKey: kind
+    - title: ApiVersion
+      valueKey: apiversion
     data: []
     pageSize: 10
   widgetDataTemplate:
