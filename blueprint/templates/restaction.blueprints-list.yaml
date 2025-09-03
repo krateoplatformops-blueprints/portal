@@ -100,6 +100,18 @@ spec:
                   "Status not available"
                 end
               )
+            },
+            {
+              valueKey: "kind",
+              kind: "jsonSchemaType",
+              type: "string",
+              stringValue: .kind
+            },
+            {
+              valueKey: "apiversion",
+              kind: "jsonSchemaType",
+              type: "string",
+              stringValue: .apiVersion
             }
           ])
         # Each row is now an array of cells → sort by the "date" cell's stringValue
