@@ -7,6 +7,9 @@ metadata:
     "krateo.io/verbose": "true"
 spec:
   widgetData:
+    allowedResources:
+      - piecharts
+      - tables
     items:
       - resourceRefId: dashboard-compositions-panel-row-piechart
         size: 6

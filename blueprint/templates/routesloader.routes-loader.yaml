@@ -6,7 +6,9 @@ metadata:
   annotations:
     "krateo.io/verbose": "true"
 spec:
-  widgetData: {}
+  widgetData:
+    allowedResources:
+      - routes
   resourcesRefs: 
     items: []
   resourcesRefsTemplate:

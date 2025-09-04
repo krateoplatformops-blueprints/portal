@@ -10,6 +10,8 @@ spec:
     name: blueprints-panels
     namespace: {{ .Release.Namespace }}
   widgetData:
+    allowedResources:
+      - panels
     items: []
   widgetDataTemplate:
     - forPath: items
