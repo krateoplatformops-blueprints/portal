@@ -10,6 +10,8 @@ spec:
     name: compositions-panels
     namespace: {{ .Release.Namespace }}
   widgetData:
+    allowedResources:
+      - panels
     prefix: compositions-datagrid-filters
     asGrid: true
     grid:

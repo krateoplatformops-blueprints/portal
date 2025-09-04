@@ -7,6 +7,9 @@ metadata:
     "krateo.io/verbose": "true"
 spec:
   widgetData:
+    allowedResources:
+      - buttons
+      - datagrids
     items:
       - resourceRefId: compositions-page-datagrid-button-drawer-filters
       - resourceRefId: compositions-page-datagrid
