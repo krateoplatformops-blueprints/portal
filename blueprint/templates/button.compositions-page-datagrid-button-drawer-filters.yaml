@@ -7,8 +7,6 @@ metadata:
     "krateo.io/verbose": "true"
 spec:
   widgetData:
-    allowedResources:
-      - filters
     icon: fa-filter
     type: primary
     size: small

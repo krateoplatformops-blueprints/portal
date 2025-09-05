@@ -7,8 +7,6 @@ metadata:
     "krateo.io/verbose": "true"
 spec:
   widgetData:
-    allowedResources:
-      - rows
     actions: {}
     title: Compositions
     items:
