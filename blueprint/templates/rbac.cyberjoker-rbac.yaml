@@ -136,7 +136,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: devs-get-list-any-compositiondefinitions-in-fireworksapp-namespace
+  name: devs-get-list-any-compositiondefinitions-in-demo-namespace
   namespace: demo-system
 rules:
 - apiGroups:
@@ -150,12 +150,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: devs-get-list-any-compositiondefinitions-in-fireworksapp-namespace
+  name: devs-get-list-any-compositiondefinitions-in-demo-namespace
   namespace: demo-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: devs-get-list-any-compositiondefinitions-in-fireworksapp-namespace
+  name: devs-get-list-any-compositiondefinitions-in-demo-namespace
 subjects:
 - kind: Group
   name: devs
@@ -164,13 +164,13 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: devs-create-get-list-frontendgithubscaffoldings-composition-in-fireworksapp-namespace
+  name: devs-create-get-list-any-composition-in-demo-namespace
   namespace: demo-system
 rules:
 - apiGroups:
   - composition.krateo.io
   resources:
-  - frontendgithubscaffoldings
+  - '*'
   verbs:
   - create
   - get
@@ -179,12 +179,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: devs-create-get-list-frontendgithubscaffoldings-composition-in-fireworksapp-namespace
+  name: devs-create-get-list-any-composition-in-demo-namespace
   namespace: demo-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: devs-create-get-list-frontendgithubscaffoldings-composition-in-fireworksapp-namespace
+  name: devs-create-get-list-any-composition-in-demo-namespace
 subjects:
 - kind: Group
   name: devs
@@ -193,7 +193,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: devs-get-list-any-widget-in-fireworksapp-namespace
+  name: devs-get-list-any-widget-in-demo-namespace
   namespace: demo-system
 rules:
 - apiGroups:
@@ -207,12 +207,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: devs-get-list-any-widget-in-fireworksapp-namespace
+  name: devs-get-list-any-widget-in-demo-namespace
   namespace: demo-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: devs-get-list-any-widget-in-fireworksapp-namespace
+  name: devs-get-list-any-widget-in-demo-namespace
 subjects:
 - kind: Group
   name: devs
@@ -221,7 +221,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: devs-get-any-restaction-in-fireworksapp-namespace
+  name: devs-get-any-restaction-in-demo-namespace
   namespace: demo-system
 rules:
 - apiGroups:
@@ -234,12 +234,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: devs-get-any-restaction-in-fireworksapp-namespace
+  name: devs-get-any-restaction-in-demo-namespace
   namespace: demo-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: devs-get-any-restaction-in-fireworksapp-namespace
+  name: devs-get-any-restaction-in-demo-namespace
 subjects:
 - kind: Group
   name: devs
@@ -248,7 +248,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: devs-get-any-configmap-in-fireworksapp-namespace
+  name: devs-get-any-configmap-in-demo-namespace
   namespace: demo-system
 rules:
 - apiGroups:
@@ -261,12 +261,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: devs-get-any-configmap-in-fireworksapp-namespace
+  name: devs-get-any-configmap-in-demo-namespace
   namespace: demo-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: devs-get-any-configmap-in-fireworksapp-namespace
+  name: devs-get-any-configmap-in-demo-namespace
 subjects:
 - kind: Group
   name: devs
