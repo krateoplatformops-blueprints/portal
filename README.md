@@ -17,7 +17,7 @@ Download Helm Chart values:
 ```sh
 helm repo add marketplace https://marketplace.krateo.io
 helm repo update marketplace
-helm inspect values marketplace/portal --version 0.0.1 > ~/portal-values.yaml
+helm inspect values marketplace/portal --version 1.0.0 > ~/portal-values.yaml
 ```
 
 Modify the *portal-values.yaml* file as the following example:
@@ -36,7 +36,7 @@ helm install <name> template \
   --namespace <namespace> \
   --create-namespace \
   -f ~/portal-values.yaml
-  --version 0.0.1 \
+  --version 1.0.0 \
   --wait
 ```
 
@@ -55,7 +55,7 @@ spec:
   chart:
     repo: portal
     url: https://marketplace.krateo.io
-    version: 0.0.1
+    version: 1.0.0
 EOF
 ```
 
@@ -63,7 +63,7 @@ Install the Blueprint using, as metadata.name, the *Blueprint* name (the Helm Ch
 
 ```sh
 cat <<EOF | kubectl apply -f -
-apiVersion: composition.krateo.io/v0-0-1
+apiVersion: composition.krateo.io/v1-0-0
 kind: Portal
 metadata:
   name: <name>
