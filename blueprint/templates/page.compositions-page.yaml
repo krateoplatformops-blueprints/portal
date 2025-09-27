@@ -1,7 +1,7 @@
 kind: Page
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: compositions-page-datagrid
+  name: compositions-page
   namespace: {{ .Release.Namespace }}
   annotations:
     "krateo.io/verbose": "true"
@@ -11,13 +11,13 @@ spec:
       - buttons
       - datagrids
     items:
-      - resourceRefId: compositions-page-datagrid-button-drawer-filters
+      - resourceRefId: compositions-page-button-drawer-filters
       - resourceRefId: compositions-page-datagrid
   resourcesRefs:
     items:
-      - id: compositions-page-datagrid-button-drawer-filters
+      - id: compositions-page-button-drawer-filters
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: compositions-page-datagrid-button-drawer-filters
+        name: compositions-page-button-drawer-filters
         namespace: {{ .Release.Namespace }}
         resource: buttons
         verb: GET
@@ -27,3 +27,6 @@ spec:
         namespace: {{ .Release.Namespace }}
         resource: datagrids
         verb: GET
+        slice:
+          page: 1
+          perPage: 5

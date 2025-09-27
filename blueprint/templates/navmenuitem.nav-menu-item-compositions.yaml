@@ -9,16 +9,16 @@ spec:
   widgetData:
     allowedResources:
       - pages
-    resourceRefId: compositions-page-datagrid
+    resourceRefId: compositions-page
     label: Compositions
     icon: fa-shapes
     path: /compositions
     order: 30
   resourcesRefs:
     items:
-      - id: compositions-page-datagrid
+      - id: compositions-page
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: compositions-page-datagrid
+        name: compositions-page
         namespace: {{ .Release.Namespace }}
         resource: pages
         verb: GET

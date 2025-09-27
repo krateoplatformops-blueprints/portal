@@ -1,26 +1,31 @@
-kind: Row
+kind: DataGrid
 apiVersion: widgets.templates.krateo.io/v1beta1
 metadata:
-  name: compositions-row
+  name: blueprints-page-datagrid
   namespace: {{ .Release.Namespace }}
   annotations:
     "krateo.io/verbose": "true"
 spec:
   apiRef:
-    name: compositions-panels
+    name: blueprints-panels
     namespace: {{ .Release.Namespace }}
   widgetData:
     allowedResources:
       - panels
+    prefix: blueprints-datagrid-filters
+    asGrid: true
+    grid:
+      column: 2
+      gutter: 16
     items: []
   widgetDataTemplate:
     - forPath: items
       expression: >
-        ${ [ .compositionspanels[] | { resourceRefId: .metadata.name, size: 24 } ] }
+        ${ [ .blueprintspanels[] | { resourceRefId: .metadata.name } ] }
   resourcesRefs: 
     items: []
   resourcesRefsTemplate:
-    - iterator: ${ .compositionspanels }
+    - iterator: ${ .blueprintspanels }
       template:
         id: ${ .metadata.name }
         apiVersion: ${ .apiVersion }
@@ -28,4 +33,3 @@ spec:
         namespace: ${ .metadata.namespace }
         name: ${ .metadata.name }
         verb: GET
-
