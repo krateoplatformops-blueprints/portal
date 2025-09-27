@@ -19,12 +19,22 @@ spec:
   filter: >
     {
       blueprintspanels: (
-        if (.blueprintspanels | type) == "array" then
+        (if (.blueprintspanels | type) == "array" then
           [.blueprintspanels[]?.items[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "blueprints")]
         elif (.blueprintspanels | type) == "object" then
           [.blueprintspanels.items[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "blueprints")]
         else
           []
-        end
+        end) as $items
+        | ($items | sort_by(.metadata.creationTimestamp // "") | reverse) as $sorted
+        | (.slice.offset  // 0)                 as $offset
+        | (.slice.perPage // ($sorted | length)) as $perPage
+        | [
+            $sorted
+            | length as $len
+            | range($offset; $offset + $perPage)
+            | select(. < $len)         # avoid out-of-bounds
+            | $sorted[.]
+          ]
       )
     }

@@ -26,14 +26,16 @@ spec:
         else
           []
         end) as $items
-        | (._slice_.offset  // 0)                 as $offset
-        | (._slice_.perPage // ($items | length)) as $perPage
+        | ($items | sort_by(.metadata.creationTimestamp // "") | reverse) as $sorted
+        | (.slice.offset  // 0)                 as $offset
+        | (.slice.perPage // ($sorted | length)) as $perPage
         | [
-            $items
+            $sorted
             | length as $len
             | range($offset; $offset + $perPage)
             | select(. < $len)         # avoid out-of-bounds
-            | $items[.]
+            | $sorted[.]
           ]
       )
     }
+

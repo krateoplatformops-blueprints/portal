@@ -8,14 +8,25 @@ metadata:
 spec:
   widgetData:
     allowedResources:
-      - rows
+      - buttons
+      - datagrids
     items:
-      - resourceRefId: blueprints-row
+      - resourceRefId: blueprints-page-button-drawer-filters
+      - resourceRefId: blueprints-page-datagrid
   resourcesRefs:
     items:
-      - id: blueprints-row
+      - id: blueprints-page-button-drawer-filters
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: blueprints-row
+        name: blueprints-page-button-drawer-filters
         namespace: {{ .Release.Namespace }}
-        resource: rows
+        resource: buttons
         verb: GET
+      - id: blueprints-page-datagrid
+        apiVersion: widgets.templates.krateo.io/v1beta1
+        name: blueprints-page-datagrid
+        namespace: {{ .Release.Namespace }}
+        resource: datagrids
+        verb: GET
+        slice:
+          page: 1
+          perPage: 5

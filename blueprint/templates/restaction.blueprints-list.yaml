@@ -17,108 +17,16 @@ spec:
     name: allCompositionDefinitions
     path: ${ "/apis/core.krateo.io/v1alpha1/namespaces/" + (.) + "/compositiondefinitions"}
   filter: >
-    (
-      # Normalize items once
-      if (.allCompositionDefinitions | type) == "array" then
-        [.allCompositionDefinitions[]?.items[]?]
-      elif (.allCompositionDefinitions | type) == "object" then
-        [.allCompositionDefinitions.items[]?]
-      else
-        []
-      end
-    ) as $items
-    |
     {
-      total: ($items | length),
-
-      data: [
-        {
-          color: "green",
-          value: ($items
-            | map(select((.status.conditions // [])
-              | map(select(.type == "Ready" and .status == "True"))
-              | length > 0))
-            | length),
-          label: "Ready:True"
-        },
-        {
-          color: "orange",
-          value: ($items
-            | map(select((.status.conditions // [])
-              | map(select(.type == "Ready" and .status == "False"))
-              | length > 0))
-            | length),
-          label: "Ready:False"
-        },
-        {
-          color: "gray",
-          value: ($items
-            | map(select((.status.conditions // [])
-              | map(select(.type == "Ready" and (.status == "True" or .status == "False")))
-              | length == 0))
-            | length),
-          label: "Unknown"
-        }
-      ],
-
       list: (
-        $items
-        | map([
-            {
-              valueKey: "key",
-              kind: "jsonSchemaType",
-              type: "string",
-              stringValue: .metadata.uid
-            },
-            {
-              valueKey: "name",
-              kind: "jsonSchemaType",
-              type: "string",
-              stringValue: .metadata.name
-            },
-            {
-              valueKey: "namespace",
-              kind: "jsonSchemaType",
-              type: "string",
-              stringValue: .metadata.namespace
-            },
-            {
-              valueKey: "date",
-              kind: "jsonSchemaType",
-              type: "string",
-              stringValue: .metadata.creationTimestamp
-            },
-            {
-              valueKey: "status",
-              kind: "jsonSchemaType",
-              type: "string",
-              stringValue: (
-                if (.status? and .status.conditions?) then
-                  (.status.conditions[]? | select(.type == "Ready") | "Ready: " + .status)?
-                  // "Status not available"
-                else
-                  "Status not available"
-                end
-              )
-            },
-            {
-              valueKey: "kind",
-              kind: "jsonSchemaType",
-              type: "string",
-              stringValue: .kind
-            },
-            {
-              valueKey: "apiversion",
-              kind: "jsonSchemaType",
-              type: "string",
-              stringValue: .apiVersion
-            }
-          ])
-        # Each row is now an array of cells → sort by the "date" cell's stringValue
-        | sort_by( ([.[] | select(.valueKey == "date") | .stringValue] | first) )
-        | reverse
+        if (.allCompositionDefinitions | type) == "array" then
+          [.allCompositionDefinitions[]?.items[]?]
+        elif (.allCompositionDefinitions | type) == "object" then
+          [.allCompositionDefinitions.items[]?]
+        else
+          []
+        end
       )
     }
-
 
 
