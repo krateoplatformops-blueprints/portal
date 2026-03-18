@@ -7,34 +7,20 @@ metadata:
     "krateo.io/verbose": "true"
 spec:
   api:
-  - name: allNamespacesAndCrds
-    path: "/call?apiVersion=templates.krateo.io%2Fv1&resource=restactions&name=compositions-get-ns-and-crd&namespace={{ .Release.Namespace }}"
-    verb: GET
+  - name: list
     endpointRef:
-      name: snowplow-endpoint
-      namespace: {{ .Release.Namespace }}
-    headers:
-    - 'Accept: application/json'
-    continueOnError: true
-    errorKey: allNamespacesAndCrdsError
-    exportJwt: true
-  - name: allCompositions
-    dependsOn: 
-      name: allNamespacesAndCrds
-      iterator: ".allNamespacesAndCrds.status"
-    path: ${ "/apis/composition.krateo.io/" + (.version) + "/namespaces/" + (.namespace) + "/" + (.plural) }
+      name: resources-presenter-endpoint
+      namespace: krateo-system
+    path: ${ if .slice.cursor != "" then ("/resources?group=composition.krateo.io&limit=" + .slice.perPage + "&namespace=*&raw=true&cursor=" + .slice.cursor) else ("/resources?group=composition.krateo.io&limit=" + .slice.perPage + "&namespace=*&raw=true") end }
     verb: GET 
     continueOnError: true
-    errorKey: allCompositionsError
-  filter: >
+    exportJwt: true
+    errorKey: list
+  filter: |
     {
-      list: (
-        if (.allCompositions | type) == "array" then
-          [.allCompositions[]?.items[]?]
-        elif (.allCompositions | type) == "object" then
-          [.allCompositions.items[]?]
-        else
-          []
-        end
-      )
+      list: ([ .list | .items[] | .raw ]),
+      slice: {
+        cursor: .list.cursor,
+        perPage: .slice.perPage,
+      }
     }

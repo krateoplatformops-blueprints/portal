@@ -7,26 +7,15 @@ metadata:
     "krateo.io/verbose": "true"
 spec:
   api:
-  - filter: '[.namespaces.items[] | .metadata.name]'
-    name: namespaces
-    path: /api/v1/namespaces
-  - continueOnError: true
-    dependsOn:
-      iterator: .namespaces
-      name: namespaces
-    name: allCompositionDefinitions
-    path: ${ "/apis/core.krateo.io/v1alpha1/namespaces/" + (.) + "/compositiondefinitions"}
-  filter: >
-    {
-      list: (
-        if (.allCompositionDefinitions | type) == "array" then
-          [.allCompositionDefinitions[]?.items[]?]
-        elif (.allCompositionDefinitions | type) == "object" then
-          [.allCompositionDefinitions.items[]?]
-        else
-          []
-        end
-      )
-    }
-
+  - name: list
+    endpointRef:
+      name: resources-presenter-endpoint
+      namespace: krateo-system
+    path: "/resources?group=core.krateo.io&resource=compositiondefinitions&limit=10000&namespace=*&raw=true"
+    verb: GET 
+    continueOnError: true
+    exportJwt: true
+    errorKey: listError
+    filter: |
+      [ .list | .items[] | .raw ]
 

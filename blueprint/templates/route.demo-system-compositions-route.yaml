@@ -2,20 +2,20 @@
 apiVersion: widgets.templates.krateo.io/v1beta1
 kind: Route
 metadata:
-  name: demo-system-compositions-route
-  namespace: demo-system
+  name: demo-system-2-compositions-route
+  namespace: demo-system-2
   annotations:
     "krateo.io/verbose": "true"
 spec:
   widgetData:
-    path: /compositions/demo-system
-    resourceRefId: demo-system-compositions-page-datagrid
+    path: /compositions/demo-system-2
+    resourceRefId: demo-system-2-compositions-page-datagrid
   resourcesRefs:
     items:
-      - id: demo-system-compositions-page-datagrid
+      - id: demo-system-2-compositions-page-datagrid
         apiVersion: widgets.templates.krateo.io/v1beta1
-        name: demo-system-compositions-page-datagrid
-        namespace: demo-system
+        name: demo-system-2-compositions-page-datagrid
+        namespace: demo-system-2
         resource: datagrids
         verb: GET
 {{- end }}

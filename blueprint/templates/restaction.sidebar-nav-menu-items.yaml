@@ -7,24 +7,14 @@ metadata:
     "krateo.io/verbose": "true"
 spec:
   api:
-  - name: namespaces
-    path: "/api/v1/namespaces"
-    filter: "[.namespaces.items[] | .metadata.name]"
   - name: navmenuitems
+    endpointRef:
+      name: resources-presenter-endpoint
+      namespace: krateo-system
+    path: "/resources?group=widgets.templates.krateo.io&version=v1beta1&resource=navmenuitems&limit=10000&namespace=*&raw=true"
+    verb: GET 
     continueOnError: true
-    dependsOn: 
-      name: namespaces
-      iterator: .namespaces
-    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/navmenuitems" }
-  filter: >
-    {
-      navmenuitems: (
-        if (.navmenuitems | type) == "array" then
-          [.navmenuitems[]?.items[]?]
-        elif (.navmenuitems | type) == "object" then
-          [.navmenuitems.items[]?]
-        else
-          []
-        end | sort_by(.spec.widgetData.order)
-      )
-    }
+    exportJwt: true
+    errorKey: navmenuitems
+    filter: |
+      [ .navmenuitems | .items[] | .raw ]
