@@ -11,16 +11,12 @@ spec:
     endpointRef:
       name: resources-presenter-endpoint
       namespace: krateo-system
-    path: ${ if .slice.cursor != "" then ("/resources?group=composition.krateo.io&limit=" + .slice.perPage + "&namespace=*&raw=true&cursor=" + .slice.cursor) else ("/resources?group=composition.krateo.io&limit=" + .slice.perPage + "&namespace=*&raw=true") end }
+    path: "/resources?group=composition.krateo.io&namespace=*&raw=true&limit=10000"
     verb: GET 
     continueOnError: true
     exportJwt: true
     errorKey: list
   filter: |
     {
-      list: ([ .list | .items[] | .raw ]),
-      slice: {
-        cursor: .list.cursor,
-        perPage: .slice.perPage,
-      }
+      list: ([ .list | .items[] | .raw ])
     }

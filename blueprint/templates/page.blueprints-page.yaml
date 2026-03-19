@@ -28,5 +28,5 @@ spec:
         resource: datagrids
         verb: GET
         slice:
-          page: 1
+          page: -1
           perPage: 5
