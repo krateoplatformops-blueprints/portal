@@ -11,7 +11,7 @@ spec:
     endpointRef:
       name: resources-presenter-endpoint
       namespace: krateo-system
-    path: "/resources?group=composition.krateo.io&namespace=*&raw=true&limit=10000"
+    path: "/resources?group=composition.krateo.io&namespace=*&raw=true&limit=5000"
     verb: GET 
     continueOnError: true
     exportJwt: true

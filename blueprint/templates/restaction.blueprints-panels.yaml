@@ -11,7 +11,16 @@ spec:
     endpointRef:
       name: resources-presenter-endpoint
       namespace: krateo-system
-    path: ${ if .slice.cursor != "" then ("/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true&cursor=" + .slice.cursor) else ("/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true") end }
+    path: >
+      ${ 
+        if .slice.cursor != "" then 
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true&cursor=" + .slice.cursor ) 
+        elif (.slice.perPage? != "" and .slice.perPage? != "NULL") then
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true" )  
+        else 
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=5000&raw=true" ) 
+        end 
+      }
     verb: GET 
     continueOnError: true
     exportJwt: true

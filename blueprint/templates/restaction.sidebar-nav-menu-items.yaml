@@ -11,10 +11,10 @@ spec:
     endpointRef:
       name: resources-presenter-endpoint
       namespace: krateo-system
-    path: "/resources?group=widgets.templates.krateo.io&version=v1beta1&resource=navmenuitems&limit=10000&namespace=*&raw=true"
+    path: "/resources?group=widgets.templates.krateo.io&version=v1beta1&resource=navmenuitems&limit=5000&namespace=*&raw=true"
     verb: GET 
     continueOnError: true
     exportJwt: true
-    errorKey: navmenuitems
+    errorKey: navmenuitemsError
     filter: |
       [ .navmenuitems | .items[] | .raw ]
