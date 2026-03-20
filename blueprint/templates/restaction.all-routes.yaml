@@ -7,24 +7,14 @@ metadata:
     "krateo.io/verbose": "true"
 spec:
   api:
-  - name: namespaces
-    path: "/api/v1/namespaces"
-    filter: "[.namespaces.items[] | .metadata.name]"
   - name: routes
+    endpointRef:
+      name: resources-presenter-endpoint
+      namespace: krateo-system
+    path: "/resources?group=widgets.templates.krateo.io&version=v1beta1&resource=routes&limit=5000&namespace=*&raw=true"
+    verb: GET 
     continueOnError: true
-    dependsOn: 
-      name: namespaces
-      iterator: .namespaces
-    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/routes" }
-  filter: >
-    {
-      routes: (
-        if (.routes | type) == "array" then
-          [.routes[]?.items[]?]
-        elif (.routes | type) == "object" then
-          [.routes.items[]?]
-        else
-          []
-        end
-      )
-    }
+    exportJwt: true
+    errorKey: routes
+    filter: |
+      [ .routes | .items[] | .raw ]

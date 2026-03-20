@@ -7,34 +7,31 @@ metadata:
     "krateo.io/verbose": "true"
 spec:
   api:
-  - name: namespaces
-    path: "/api/v1/namespaces"
-    filter: "[.namespaces.items[] | .metadata.name]"
   - name: blueprintspanels
-    dependsOn: 
-      name: namespaces
-      iterator: .namespaces
-    path: ${ "/apis/widgets.templates.krateo.io/v1beta1/namespaces/" + (.) + "/panels" }
+    endpointRef:
+      name: resources-presenter-endpoint
+      namespace: krateo-system
+    path: >
+      ${ 
+        if .slice.cursor != "" then 
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true&cursor=" + .slice.cursor ) 
+        elif (.slice.perPage? != "" and .slice.perPage? != "NULL") then
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true" )  
+        else 
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=5000&raw=true" ) 
+        end 
+      }
+    verb: GET 
     continueOnError: true
+    exportJwt: true
+    errorKey: blueprintspanelsError
   filter: >
+    ([ .blueprintspanels.items[] | .raw ]) as $panels |
     {
-      blueprintspanels: (
-        (if (.blueprintspanels | type) == "array" then
-          [.blueprintspanels[]?.items[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "blueprints")]
-        elif (.blueprintspanels | type) == "object" then
-          [.blueprintspanels.items[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "blueprints")]
-        else
-          []
-        end) as $items
-        | ($items | sort_by(.metadata.creationTimestamp // "") | reverse) as $sorted
-        | (.slice.offset  // 0)                 as $offset
-        | (.slice.perPage // ($sorted | length)) as $perPage
-        | [
-            $sorted
-            | length as $len
-            | range($offset; $offset + $perPage)
-            | select(. < $len)         # avoid out-of-bounds
-            | $sorted[.]
-          ]
-      )
+      blueprintspanels: [$panels[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "blueprints")],
+      slice: {
+        cursor: .blueprintspanels.cursor,
+        perPage: .slice.perPage
+      }
     }
+
