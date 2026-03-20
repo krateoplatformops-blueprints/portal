@@ -2,20 +2,20 @@
 apiVersion: widgets.templates.krateo.io/v1beta1
 kind: Route
 metadata:
-  name: demo-system-2-composition-route
-  namespace: demo-system-2
+  name: demo-system-composition-route
+  namespace: demo-system
   annotations:
     "krateo.io/verbose": "true"
 spec:
   widgetData:
-    path: /compositions/demo-system-2/{kind}/{name}
-    resourceRefId: demo-system-2-composition-tablist
+    path: /compositions/demo-system/{kind}/{name}
+    resourceRefId: demo-system-composition-tablist
   resourcesRefs:
     items:
-      - id: demo-system-2-composition-tablist
+      - id: demo-system-composition-tablist
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: "{kind}-{name}-composition-tablist"
-        namespace: demo-system-2
+        namespace: demo-system
         resource: tablists
         verb: GET
 {{- end }}

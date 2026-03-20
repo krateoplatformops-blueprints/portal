@@ -17,7 +17,7 @@ enableAdminUser: true
 enableCyberjokerUser: true
 
 # @schema
-# description: enabling the demo creates the demo-system-2 namespace, deploys two Route resources within it, and grants permissions to the cyberjoker user if that user is enabled
+# description: enabling the demo creates the demo-system namespace, deploys two Route resources within it, and grants permissions to the cyberjoker user if that user is enabled
 # type: boolean
 # default: true
 # @schema

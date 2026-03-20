@@ -132,12 +132,12 @@ subjects:
   apiGroup: rbac.authorization.k8s.io
 ---
 {{- if .Values.enableDemoSystemNamespace }}
-# demo-system-2 permissions
+# demo-system permissions
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: devs-get-list-any-compositiondefinitions-in-demo-namespace
-  namespace: demo-system-2
+  namespace: demo-system
 rules:
 - apiGroups:
   - core.krateo.io
@@ -151,7 +151,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: devs-get-list-any-compositiondefinitions-in-demo-namespace
-  namespace: demo-system-2
+  namespace: demo-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -165,7 +165,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: devs-create-get-list-any-composition-in-demo-namespace
-  namespace: demo-system-2
+  namespace: demo-system
 rules:
 - apiGroups:
   - composition.krateo.io
@@ -180,7 +180,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: devs-create-get-list-any-composition-in-demo-namespace
-  namespace: demo-system-2
+  namespace: demo-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -194,7 +194,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: devs-get-list-any-widget-in-demo-namespace
-  namespace: demo-system-2
+  namespace: demo-system
 rules:
 - apiGroups:
   - widgets.templates.krateo.io
@@ -208,7 +208,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: devs-get-list-any-widget-in-demo-namespace
-  namespace: demo-system-2
+  namespace: demo-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -222,7 +222,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: devs-get-list-any-restaction-in-demo-namespace
-  namespace: demo-system-2
+  namespace: demo-system
 rules:
 - apiGroups:
   - templates.krateo.io
@@ -236,7 +236,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: devs-get-list-any-restaction-in-demo-namespace
-  namespace: demo-system-2
+  namespace: demo-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -250,7 +250,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: devs-get-any-configmap-in-demo-namespace
-  namespace: demo-system-2
+  namespace: demo-system
 rules:
 - apiGroups:
   - ''
@@ -263,7 +263,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: devs-get-any-configmap-in-demo-namespace
-  namespace: demo-system-2
+  namespace: demo-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
