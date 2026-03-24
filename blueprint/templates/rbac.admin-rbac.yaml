@@ -1,5 +1,5 @@
 {{- if .Values.enableAdminUser }}
-{{- if not (lookup "v1" "Secret" .Release.Namespace "admin-password") }}
+{{- $existingSecret := lookup "v1" "Secret" .Release.Namespace "admin-password" }}
 apiVersion: v1
 kind: Secret
 type: kubernetes.io/basic-auth
@@ -7,8 +7,7 @@ metadata:
   name: admin-password
   namespace: {{ .Release.Namespace }}
 stringData:
-  password: {{ randAlphaNum 12 | quote }}
-{{- end }}
+  password: {{ if $existingSecret }}{{ $existingSecret.data.password | b64dec | quote }}{{ else }}{{ randAlphaNum 12 | quote }}{{ end }}
 ---
 apiVersion: basic.authn.krateo.io/v1alpha1
 kind: User
