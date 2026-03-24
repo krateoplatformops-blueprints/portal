@@ -17,4 +17,4 @@ spec:
     exportJwt: true
     errorKey: navmenuitemsError
     filter: |
-      [ .navmenuitems | .items[] | .raw ]
+      [ .navmenuitems | .items[] | .raw ] | sort_by(.spec.widgetData.order)

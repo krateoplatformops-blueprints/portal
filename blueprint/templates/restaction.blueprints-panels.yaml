@@ -13,22 +13,21 @@ spec:
       namespace: krateo-system
     path: >
       ${ 
-        if .slice.cursor != "" then 
-          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true&cursor=" + .slice.cursor ) 
+        if .slice.cursor? != "" then 
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true&cursor=" + .slice.cursor + "&labels={\"krateo.io/portal-page\":\"blueprints\"}" ) 
         elif (.slice.perPage? != "" and .slice.perPage? != "NULL") then
-          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true" )  
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true&labels={\"krateo.io/portal-page\":\"blueprints\"}" ) 
         else 
-          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=5000&raw=true" ) 
-        end 
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=5000&raw=true&labels={\"krateo.io/portal-page\":\"blueprints\"}" ) 
+        end
       }
     verb: GET 
     continueOnError: true
     exportJwt: true
     errorKey: blueprintspanelsError
   filter: >
-    ([ .blueprintspanels.items[] | .raw ]) as $panels |
     {
-      blueprintspanels: [$panels[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "blueprints")],
+      blueprintspanels: [ .blueprintspanels.items[] | .raw ],
       slice: {
         cursor: .blueprintspanels.cursor,
         perPage: .slice.perPage

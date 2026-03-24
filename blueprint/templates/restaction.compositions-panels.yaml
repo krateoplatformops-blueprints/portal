@@ -14,11 +14,11 @@ spec:
     path: >
       ${ 
         if .slice.cursor? != "" then 
-          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true&cursor=" + .slice.cursor ) 
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true&cursor=" + .slice.cursor + "&labels={\"krateo.io/portal-page\":\"compositions\"}" ) 
         elif (.slice.perPage? != "" and .slice.perPage? != "NULL") then
-          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true" ) 
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=" + (.slice.perPage | tostring) + "&raw=true&labels={\"krateo.io/portal-page\":\"compositions\"}" ) 
         else 
-          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=5000&raw=true" ) 
+          ( "/resources?group=widgets.templates.krateo.io&resource=panels&version=v1beta1&namespace=*&limit=5000&raw=true&labels={\"krateo.io/portal-page\":\"compositions\"}" ) 
         end
       }
     verb: GET 
@@ -26,12 +26,10 @@ spec:
     exportJwt: true
     errorKey: allCompositionsError
   filter: >
-    ([ .compositionspanels.items[] | .raw ]) as $panels |
     {
-      compositionspanels: [$panels[]? | select((.metadata.labels // {})["krateo.io/portal-page"] == "compositions")],
+      compositionspanels: [ .compositionspanels.items[] | .raw ],
       slice: {
         cursor: .compositionspanels.cursor,
         perPage: .slice.perPage
-      },
-      sliceold: .slice
+      }
     }
