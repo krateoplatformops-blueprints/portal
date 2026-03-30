@@ -10,7 +10,7 @@ spec:
   - name: navmenuitems
     endpointRef:
       name: resources-presenter-endpoint
-      namespace: krateo-system
+      namespace: {{ .Release.Namespace }}
     path: "/resources?group=widgets.templates.krateo.io&version=v1beta1&resource=navmenuitems&limit=5000&namespace=*&raw=true"
     verb: GET 
     continueOnError: true

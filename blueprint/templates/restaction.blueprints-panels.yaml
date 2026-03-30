@@ -10,7 +10,7 @@ spec:
   - name: blueprintspanels
     endpointRef:
       name: resources-presenter-endpoint
-      namespace: krateo-system
+      namespace: {{ .Release.Namespace }}
     path: >
       ${ 
         if .slice.cursor? != "" then 

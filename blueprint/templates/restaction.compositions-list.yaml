@@ -10,7 +10,7 @@ spec:
   - name: list
     endpointRef:
       name: resources-presenter-endpoint
-      namespace: krateo-system
+      namespace: {{ .Release.Namespace }}
     path: "/resources?group=composition.krateo.io&namespace=*&raw=true&limit=5000"
     verb: GET 
     continueOnError: true
