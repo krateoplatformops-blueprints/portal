@@ -8,14 +8,14 @@ metadata:
     "krateo.io/verbose": "true"
 spec:
   widgetData:
-    path: /compositions/demo-system/{kind}/{name}
-    resourceRefId: demo-system-composition-tablist
+    path: /compositions/{namespace}/{kind}/{name}
+    resourceRefId: composition-tablist
   resourcesRefs:
     items:
-      - id: demo-system-composition-tablist
+      - id: composition-tablist
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: "{kind}-{name}-composition-tablist"
-        namespace: demo-system
+        namespace: "{namespace}"
         resource: tablists
         verb: GET
 {{- end }}
