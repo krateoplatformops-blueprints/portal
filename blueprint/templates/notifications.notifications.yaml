@@ -1,0 +1,7 @@
+kind: Notifications
+apiVersion: widgets.templates.krateo.io/v1beta1
+metadata:
+  name: notifications
+  namespace: {{ .Release.Namespace }}
+spec:
+  widgetData: {}
