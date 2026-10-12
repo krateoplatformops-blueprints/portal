@@ -9,10 +9,35 @@ spec:
   widgetData:
     allowedResources:
       - routes
-  resourcesRefs: 
+  # Routes whose widgetData is static are sent inline; the frontend registers them all at once
+  widgetDataTemplate:
+    - forPath: routes
+      expression: >
+        ${ [ (.routes | if type == "array" then . else [] end)[]
+             | select(.spec.apiRef == null and .spec.widgetDataTemplate == null)
+             | { id: (.metadata.namespace + "_" + .metadata.name), path: .spec.widgetData.path } ] }
+  resourcesRefs:
     items: []
   resourcesRefsTemplate:
-    - iterator: ${ .routes }
+    # the resource each inline route opens, under the route's id
+    - iterator: >
+        ${ [ (.routes | if type == "array" then . else [] end)[]
+             | select(.spec.apiRef == null and .spec.widgetDataTemplate == null)
+             | . as $route
+             | $route.spec.resourcesRefs.items[]?
+             | select(.id == $route.spec.widgetData.resourceRefId)
+             | . + { id: ($route.metadata.namespace + "_" + $route.metadata.name) } ] }
+      template:
+        id: ${ .id }
+        apiVersion: ${ .apiVersion }
+        resource: ${ .resource }
+        name: ${ .name }
+        namespace: ${ .namespace }
+        verb: GET
+    # Routes with an apiRef or widgetDataTemplate are loaded as Route widgets
+    - iterator: >
+        ${ [ (.routes | if type == "array" then . else [] end)[]
+             | select(.spec.apiRef != null or .spec.widgetDataTemplate != null) ] }
       template:
         id: ${ .metadata.namespace + "_" + .metadata.name }
         name: ${ .metadata.name }
