@@ -15,7 +15,7 @@ spec:
       - id: composition-tablist
         apiVersion: widgets.templates.krateo.io/v1beta1
         name: "{kind}-{name}-composition-tablist"
-        namespace: "{namespace}"
+        namespace: demo-system
         resource: tablists
         verb: GET
 {{- end }}
